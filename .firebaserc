@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "vtc": "vtc-reservation-bot",
+    "default": "vtc-reservation-bot"
+  },
+  "targets": {},
+  "etags": {}
+}

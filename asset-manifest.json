@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/VTCEliteProjet/static/css/main.9cf60d16.css",
+    "main.js": "/VTCEliteProjet/static/js/main.ccd95f76.js",
+    "static/js/453.04326ae8.chunk.js": "/VTCEliteProjet/static/js/453.04326ae8.chunk.js",
+    "index.html": "/VTCEliteProjet/index.html",
+    "main.9cf60d16.css.map": "/VTCEliteProjet/static/css/main.9cf60d16.css.map",
+    "main.ccd95f76.js.map": "/VTCEliteProjet/static/js/main.ccd95f76.js.map",
+    "453.04326ae8.chunk.js.map": "/VTCEliteProjet/static/js/453.04326ae8.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9cf60d16.css",
+    "static/js/main.ccd95f76.js"
+  ]
+}
