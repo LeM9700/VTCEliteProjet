@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Fonction pour vérifier si l'utilisateur est authentifié
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Fonction pour vérifier si le numéro de téléphone est validé
+    function isPhoneVerified() {
+      return request.auth.token.phone_number != null;
+    }
+    
+    // Fonction pour valider les données de réservation
+    function isValidReservation() {
+      let reservation = request.resource.data;
+      return reservation.name is string
+        && reservation.name.size() > 0
+        && reservation.location is string
+        && reservation.location.size() > 0
+        && reservation.destination is string
+        && reservation.destination.size() > 0
+        && reservation.serviceType is string
+        && reservation.serviceType in ['Trajet classique', 'Trajet Premium', 'Mise à disposition']
+        && reservation.passengers is number
+        && reservation.passengers > 0
+        && reservation.passengers <= 8
+        && reservation.bags is number
+        && reservation.bags >= 0
+        && reservation.bags <= 10
+        && reservation.date is timestamp
+        && reservation.time is string
+        && reservation.payment is string
+        && reservation.payment in ['Espèces', 'CB']
+        && reservation.phone is string
+        && reservation.phone.matches('^\\+?[0-9]{10,15}$')
+        && reservation.prix is number
+        && reservation.prix > 0;
+    }
+    
+    // Règles pour la collection des réservations
+    match /reservations/{reservationId} {
+      allow read: if isAuthenticated() && isPhoneVerified();
+      allow create: if isAuthenticated() 
+        && isPhoneVerified() 
+        && isValidReservation()
+        && request.time < resource.data.date;
+      allow update, delete: if false; // Les réservations ne peuvent pas être modifiées ou supprimées
+    }
+  }
+} 

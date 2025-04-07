@@ -1,54 +1,73 @@
-import React, { useEffect, useRef, useState } from "react";
-
-
+import React, { useEffect, useRef } from 'react';
 
 const AddressAutocomplete = ({ onPlaceSelected }) => {
-  const inputRef = useRef(null);
-  const [isScriptLoaded, setIsScriptLoaded] = useState(false);
+    const inputRef = useRef(null);
+    const autocompleteRef = useRef(null);
 
-  // Charger le script Google Maps avec l'API Places
-  useEffect(() => {
-    const loadGoogleMapsScript = () => {
-      const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places`;
-      script.async = true;
-      script.onload = () => setIsScriptLoaded(true);  // Marquer le script comme chargé une fois prêt
-      document.body.appendChild(script);
+    useEffect(() => {
+        // Chargement asynchrone de l'API Google Maps
+        const loadGoogleMaps = () => {
+            return new Promise((resolve, reject) => {
+                if (window.google) {
+                    resolve();
+                    return;
+                }
 
-      // Nettoyage pour supprimer le script après utilisation
-      return () => {
-        document.body.removeChild(script);
-      };
-    };
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places&loading=async`;
+                script.async = true;
+                script.defer = true;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        };
 
-    // Charger le script une fois au montage
-    loadGoogleMapsScript();
-  }, []);
+        const initializeAutocomplete = async () => {
+            try {
+                await loadGoogleMaps();
+                
+                if (!window.google || !window.google.maps || !window.google.maps.places) {
+                    console.error('Google Maps API non chargée correctement');
+                    return;
+                }
 
-  // Initialiser l'autocomplétion lorsque le script est chargé
-  useEffect(() => {
-    if (!isScriptLoaded || !window.google) return;
+                autocompleteRef.current = new window.google.maps.places.Autocomplete(
+                    inputRef.current,
+                    {
+                        types: ['address'],
+                        componentRestrictions: { country: 'fr' }
+                    }
+                );
 
-    const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
-      types: ['geocode'],
-      componentRestrictions: { country: 'fr' },
-    });
+                autocompleteRef.current.addListener('place_changed', () => {
+                    const place = autocompleteRef.current.getPlace();
+                    if (place && place.formatted_address) {
+                        onPlaceSelected(place.formatted_address);
+                    }
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement de Google Maps:', error);
+            }
+        };
 
-    // Ajouter un listener pour récupérer le lieu sélectionné
-    autocomplete.addListener("place_changed", () => {
-      const place = autocomplete.getPlace();
-      onPlaceSelected(place.formatted_address || inputRef.current.value);
-    });
-  }, [isScriptLoaded]);
+        initializeAutocomplete();
 
-  return (
-    <input
-      type="text"
-      ref={inputRef}
-      placeholder="Entrez une adresse"
-      disabled={!isScriptLoaded}  // Désactiver le champ jusqu'à ce que le script soit chargé
-    />
-  );
+        return () => {
+            if (autocompleteRef.current) {
+                window.google.maps.event.clearInstanceListeners(autocompleteRef.current);
+            }
+        };
+    }, [onPlaceSelected]);
+
+    return (
+        <input
+            ref={inputRef}
+            type="text"
+            placeholder="Entrez une adresse"
+            className="address-input"
+        />
+    );
 };
 
 export default AddressAutocomplete;
