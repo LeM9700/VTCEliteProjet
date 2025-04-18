@@ -255,17 +255,20 @@ const Chatbot = () => {
                 try {
                         
                         
-                    const confirmation = await signInWithPhoneNumber(auth, formattedPhone, window.recaptchaVerifier);
-                    
-                    
+                    const confirmation = await signInWithPhoneNumber(auth, formattedPhone, window.recaptchaVerifier);                    
                     setConfirmationResult(confirmation);
-                    setStep(12.5);
+                    setStep(13);
                     
                 } catch (error) {
                     setErrorMessage("⚠️ Erreur lors de l'envoi du SMS : " + error.message);
                     console.error("Erreur Firebase Auth:", error);
                 }
                    
+                
+            }
+
+            
+            else if (step=== 13){
                 if (confirmationResult){confirmationResult.confirm(response)
                     .then(result => {
                         newMessages.push({ text: "✅ Vérification réussie ! Votre réservation est presque terminée.", sender: "bot" });
@@ -278,13 +281,29 @@ const Chatbot = () => {
                     });}
                 else{newMessages.push({ text: "⚠️ La vérification du code a échoué. Veuillez réessayer plus tard.", sender: "bot" });
             }    
-            }
-            else if (step=== 13){
-                newMessages.push({ text: "Votre réservation est :\n📍 ${reservation.location}\n👤 ${reservation.name}\n🛣️ Service : ${reservation.serviceType}\n📅 ${reservation.date}\n🕒 ${reservation.time}\n💰 Paiement : ${reservation.payment}\n📞 Téléphone : ${reservation.phone}\n Prix : ${reservation.prix}\nConfirmez-vous votre demande réservation ?" , sender: "bot" })
-                setStep(14)
+                
             }
 
             else if (step === 14) {
+                newMessages.push({ text: "Votre réservation est :\n📍 ${reservation.location}\n👤 ${reservation.name}\n🛣️ Service : ${reservation.serviceType}\n📅 ${reservation.date}\n🕒 ${reservation.time}\n💰 Paiement : ${reservation.payment}\n📞 Téléphone : ${reservation.phone}\n Prix : ${reservation.prix}\nConfirmez-vous votre demande réservation ?" , sender: "bot" })
+                setStep(15)
+                if (response.toLowerCase() === "oui") {
+                    try {
+                        
+                        await addDoc(collection(db, "reservations"), reservation);
+                        newMessages.push({ text: "Merci ! Votre demande réservation est enregistrée et une demande a été envoyée à notre équipe de planification, une réponse vous sera envoyé dans quelques minutes en vous confirmant la prise en charge et le montant. VTCLAND vous remercie pour votre confiance !", sender: "bot" });
+                        setTimeout(() => navigate("https://lem9700.github.io/vtc-redirection/"), 7000);
+                    } catch (error) {
+                        newMessages.push({ text: "Erreur lors de l'enregistrement. Veuillez réessayer."+ error, sender: "bot" });
+                    }
+                } else {
+                    newMessages.push({ text: "D'accord, votre réservation a été annulée. Nous allons reprendre depuis le début", sender: "bot" });
+                    setTimeout(setStep(1),2000)
+                }
+                
+            }
+
+            else if (step === 15) {
                 
                 if (response.toLowerCase() === "oui") {
                     try {

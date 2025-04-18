@@ -1,0 +1,38 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Fonction pour vérifier si l'utilisateur est authentifié
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Fonction pour vérifier si l'utilisateur est le propriétaire du document
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Règles pour la collection des réservations
+    match /reservations/{reservationId} {
+      // Lecture : uniquement l'utilisateur authentifié peut lire ses propres réservations
+      allow read: if isAuthenticated() && 
+        (resource.data.userId == request.auth.uid || 
+         resource.data.phone == request.auth.token.phone_number);
+
+      // Création : tout utilisateur authentifié peut créer une réservation
+      allow create: if isAuthenticated() && 
+        request.resource.data.userId == request.auth.uid;
+
+      // Mise à jour : uniquement l'utilisateur propriétaire peut mettre à jour
+      allow update: if isOwner(resource.data.userId);
+
+      // Suppression : uniquement l'utilisateur propriétaire peut supprimer
+      allow delete: if isOwner(resource.data.userId);
+    }
+
+    // Règles pour la collection des utilisateurs
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+  }
+} 
