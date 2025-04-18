@@ -229,9 +229,24 @@ const Chatbot = () => {
                     setIsTyping(false);
                     return;
                 } else {
-                    newMessages.push({ text: "📲 Un code de vérification vous a été envoyé par SMS. Veuillez l’entrer pour valider votre réservation.", sender: "bot" });
-                    console.log(step);
-                    setStep(12.5);
+                    let formattedPhone = response.trim();
+                    if (!formattedPhone.startsWith("+")) {
+                    formattedPhone = "+33" + formattedPhone.slice(1);}
+
+                    try {
+                            
+                            
+                        const confirmation = await signInWithPhoneNumber(auth, formattedPhone, window.recaptchaVerifier);                    
+                        setConfirmationResult(confirmation);
+                        newMessages.push({ text: "📲 Un code de vérification vous a été envoyé par SMS. Veuillez l’entrer pour valider votre réservation.", sender: "bot" });
+                        console.log(step);
+                        setStep(13);
+                        
+                    } catch (error) {
+                        setErrorMessage("⚠️ Erreur lors de l'envoi du SMS : " + error.message);
+                        console.error("Erreur Firebase Auth:", error);
+                    }
+                    
                     
                     if (!window.recaptchaVerifier) {
                         newMessages.push({ text: "⚠️ Erreur : reCAPTCHA non initialisé.", sender: "bot" });
@@ -246,26 +261,7 @@ const Chatbot = () => {
                 }
             } 
             
-            else if (step === 12.5) {
-
-                let formattedPhone = response.trim();
-                if (!formattedPhone.startsWith("+")) {
-                formattedPhone = "+33" + formattedPhone.slice(1);}
-
-                try {
-                        
-                        
-                    const confirmation = await signInWithPhoneNumber(auth, formattedPhone, window.recaptchaVerifier);                    
-                    setConfirmationResult(confirmation);
-                    setStep(13);
-                    
-                } catch (error) {
-                    setErrorMessage("⚠️ Erreur lors de l'envoi du SMS : " + error.message);
-                    console.error("Erreur Firebase Auth:", error);
-                }
-                   
-                
-            }
+            
 
             
             else if (step=== 13){
