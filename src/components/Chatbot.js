@@ -398,7 +398,7 @@ const Chatbot = () => {
                     {step === 12.5 && (
                             <div>
                             <input type="text" pattern="[0-9]*" inputMode="numeric" maxLength="6" placeholder="Entrez le code de confirmation" onChange={(e) => setInput(e.target.value) } />
-                            <button onClick={() => handleResponse(hours)}>Envoyer</button>
+                            <button onClick={() => handleResponse(input)}disabled={input.length !== 6}>Envoyer</button>
                             </div>
                         )}
                     {step === 13 && ["Oui", "Non"].map(option => (
