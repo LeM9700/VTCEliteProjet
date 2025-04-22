@@ -29,7 +29,7 @@ const AddressAutocomplete = ({ onPlaceSelected }) => {
   useEffect(() => {
     if (!isScriptLoaded || !window.google) return;
 
-    const autocomplete = new window.google.maps.places.PlaceAutocompleteElement(inputRef.current, {
+    const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, {
       types: ['geocode'],
       componentRestrictions: { country: 'fr' },
     });
