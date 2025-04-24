@@ -7,6 +7,8 @@ import { auth, db } from "../firebase/functions/firebaseConfig";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import AddressAutocomplete from "./AddressAutocomplete";
 import { setLogLevel } from "firebase/firestore";
+import emailjs from 'emailjs-com';
+
 
 
 
@@ -205,7 +207,7 @@ const Chatbot = () => {
                 newMessages.push({ text: "À quelle heure souhaitez-vous être pris en charge ?", sender: "bot" });
                 setStep(10);}
             } else if (step === 10) {
-                setReservation({ ...reservation, hour: escapedResponse });
+                setReservation({ ...reservation, time: escapedResponse });
                 if (reservation.serviceType === "Trajet Confort" || reservation.serviceType === "Trajet Premium") {
                     // Appel à la fonction pour calculer la distance et le tarif
                     calculateDistanceAndFare(reservation.location, reservation.destination,reservation.serviceType);}
@@ -316,12 +318,60 @@ const Chatbot = () => {
                             text: "Merci ! Votre demande réservation est enregistrée et une demande a été envoyée à notre équipe de planification. Une réponse vous sera envoyée dans quelques minutes pour confirmer la prise en charge et le montant. VTCLAND vous remercie pour votre confiance !",
                             sender: "bot"
                         });
+
+                        await emailjs.send(
+                            'service_sjvypzp',             // ID du service
+                            'template_m91rrm3',   // ID du template
+                            {
+                                name: reservation.name,
+                                location: reservation.location,
+                                destination: reservation.destination,
+                                serviceType: reservation.serviceType,
+                                passengers: reservation.passengers,
+                                bags: reservation.bags,
+                                hour: reservation.hour,
+                                date: reservation.date,
+                                time: reservation.time,
+                                payment: reservation.payment,
+                                phone: reservation.phone,
+                                prix: reservation.prix,
+                                sentAt: formattedDate,
+                                status: "pending" // ou "refusée"
+                            },
+                            'user_Er6iVCvQCds16CSph'         // Votre user ID EmailJS
+                          );
+                          
             
                         setTimeout(() => navigate("https://lem9700.github.io/vtc-redirection/"), 7000);
                     } catch (error) {
                         newMessages.push({ text: "Erreur lors de l'enregistrement. Veuillez réessayer. " + error.message, sender: "bot" });
                     }
                 } else {
+
+                    const now = new Date();
+                    const formattedDate = now.toLocaleDateString('fr-FR'); // => "22/04/2025"
+                    await emailjs.send(
+                        'service_sjvypzp',
+                        'template_m91rrm3',
+                        {
+                            name: reservation.name,
+                            location: reservation.location,
+                            destination: reservation.destination,
+                            serviceType: reservation.serviceType,
+                            passengers: reservation.passengers,
+                            bags: reservation.bags,
+                            hour: reservation.hour,
+                            date: reservation.date,
+                            time: reservation.time,
+                            payment: reservation.payment,
+                            phone: reservation.phone,
+                            prix: reservation.prix,
+                            sentAt: formattedDate,
+                            status: "refusée"
+                        },
+                        'user_Er6iVCvQCds16CSph'
+                      );
+                      
                     newMessages.push({ text: "D'accord, votre réservation a été annulée. Nous allons reprendre depuis le début.", sender: "bot" });
                     setTimeout(() => setStep(1), 2000);
                 }
