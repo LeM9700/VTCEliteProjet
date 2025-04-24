@@ -21,7 +21,7 @@ const Chatbot = () => {
     const [step, setStep] = useState(1);
     const [reservation, setReservation] = useState({ 
         name: "", location: "", destination: "", serviceType: "", passengers: "", bags: "", 
-        hour:"", date: "", time: "", payment: "", phone: "", prix : "", sentAt:"", status : "pending"
+        hour:"", date: "", time: "", payment: "", phone: "", prix : "", sentAt:"", status : "en attente"
     });
     const [input, setInput] = useState("");
     const [isTyping, setIsTyping] = useState(false);
@@ -330,14 +330,14 @@ const Chatbot = () => {
                                 serviceType: reservation.serviceType,
                                 passengers: reservation.passengers,
                                 bags: reservation.bags,
-                                hour: reservation.hour,
+                                //hour: reservation.hour,
                                 date: reservation.date,
-                                time: reservation.time,
+                                //time: reservation.time,
                                 payment: reservation.payment,
                                 phone: reservation.phone,
                                 prix: reservation.prix,
-                                sentAt: formattedDate,
-                                status: "pending" // ou "refusée"
+                                //sentAt: formattedDate,
+                                status: "en attente" // ou "refusée"
                             },
                             'Er6iVCvQCds16CSph'         // Votre user ID EmailJS
                           );
