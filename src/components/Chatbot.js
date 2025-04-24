@@ -209,6 +209,7 @@ const Chatbot = () => {
             } else if (step === 10) {
                 
                 if (reservation.serviceType === "Trajet Confort" || reservation.serviceType === "Trajet Premium") {
+                    setReservation({ ...reservation, time: escapedResponse });
                     // Appel à la fonction pour calculer la distance et le tarif
                     calculateDistanceAndFare(reservation.location, reservation.destination,reservation.serviceType);}
                  
@@ -289,6 +290,10 @@ const Chatbot = () => {
             }
             
             else if (step === 13) {
+                const now = new Date();
+                const formattedDate = now.toLocaleDateString('fr-FR'); // => "22/04/2025"
+                  
+                setReservation({ ...reservation, sentAt: formattedDate });
                 newMessages.push({
                     text: `Votre réservation est :
             \n📍 ${reservation.location}
@@ -319,28 +324,59 @@ const Chatbot = () => {
                             text: "Merci ! Votre demande réservation est enregistrée et une demande a été envoyée à notre équipe de planification. Une réponse vous sera envoyée dans quelques minutes pour confirmer la prise en charge et le montant. VTCLAND vous remercie pour votre confiance !",
                             sender: "bot"
                         });
+                        if (reservation.serviceType === "Mise à disposition"){
 
-                        await emailjs.send(
-                            'service_sjvypzp',             // ID du service
-                            'template_m91rrm3',   // ID du template
-                            {
-                                name: reservation.name,
-                                location: reservation.location,
-                                destination: reservation.destination,
-                                serviceType: reservation.serviceType,
-                                passengers: reservation.passengers,
-                                bags: reservation.bags,
-                                //hour: reservation.hour,
-                                date: reservation.date,
-                                //time: reservation.time,
-                                payment: reservation.payment,
-                                phone: reservation.phone,
-                                prix: reservation.prix,
-                                //sentAt: formattedDate,
-                                status: "en attente" // ou "refusée"
-                            },
-                            'Er6iVCvQCds16CSph'         // Votre user ID EmailJS
-                          );
+
+
+                            await emailjs.send(
+                                'service_sjvypzp',             // ID du service
+                                'template_m59xsm7',   // ID du template
+                                {
+                                    name: reservation.name,
+                                    location: reservation.location,
+                                    serviceType: reservation.serviceType,
+                                    passengers: reservation.passengers,
+                                    bags: reservation.bags,
+                                    hour: reservation.hour,
+                                    date: reservation.date,
+                                    time: reservation.time,
+                                    payment: reservation.payment,
+                                    phone: reservation.phone,
+                                    prix: reservation.prix,
+                                    sentAt: formattedDate,
+                                    status: "en attente" // ou "refusée"
+                                },
+                                'Er6iVCvQCds16CSph'         // Votre user ID EmailJS
+                              );
+
+                        }
+                        else if (reservation.serviceType === "Trajet Confort " ||"Trajet Premium"){
+
+                            await emailjs.send(
+                                'service_sjvypzp',             // ID du service
+                                'template_m91rrm3',   // ID du template
+                                {
+                                    name: reservation.name,
+                                    location: reservation.location,
+                                    destination: reservation.destination,
+                                    serviceType: reservation.serviceType,
+                                    passengers: reservation.passengers,
+                                    bags: reservation.bags,
+                                    date: reservation.date,
+                                    time: reservation.time,
+                                    payment: reservation.payment,
+                                    phone: reservation.phone,
+                                    prix: reservation.prix,
+                                    sentAt: formattedDate,
+                                    status: "en attente" // ou "refusée"
+                                },
+                                'Er6iVCvQCds16CSph'         // Votre user ID EmailJS
+                              );
+
+
+
+                        }
+                        
                           
             
                         setTimeout(() => navigate("https://lem9700.github.io/vtc-redirection/"), 7000);
@@ -359,9 +395,6 @@ const Chatbot = () => {
                             location: reservation.location,
                             destination: reservation.destination,
                             serviceType: reservation.serviceType,
-                            passengers: reservation.passengers,
-                            bags: reservation.bags,
-                            hour: reservation.hour,
                             date: reservation.date,
                             time: reservation.time,
                             payment: reservation.payment,
