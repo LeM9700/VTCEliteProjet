@@ -207,11 +207,12 @@ const Chatbot = () => {
                 newMessages.push({ text: "À quelle heure souhaitez-vous être pris en charge ?", sender: "bot" });
                 setStep(10);}
             } else if (step === 10) {
-                setReservation({ ...reservation, time: escapedResponse });
+                
                 if (reservation.serviceType === "Trajet Confort" || reservation.serviceType === "Trajet Premium") {
                     // Appel à la fonction pour calculer la distance et le tarif
                     calculateDistanceAndFare(reservation.location, reservation.destination,reservation.serviceType);}
                  
+                setReservation({ ...reservation, time: escapedResponse });
                 newMessages.push({ text: "Comment souhaitez-vous régler ?", sender: "bot" });
                 setStep(11);
             } else if (step === 11) {
@@ -338,7 +339,7 @@ const Chatbot = () => {
                                 sentAt: formattedDate,
                                 status: "pending" // ou "refusée"
                             },
-                            'user_Er6iVCvQCds16CSph'         // Votre user ID EmailJS
+                            'Er6iVCvQCds16CSph'         // Votre user ID EmailJS
                           );
                           
             
@@ -369,7 +370,7 @@ const Chatbot = () => {
                             sentAt: formattedDate,
                             status: "refusée"
                         },
-                        'user_Er6iVCvQCds16CSph'
+                        'Er6iVCvQCds16CSph'
                       );
                       
                     newMessages.push({ text: "D'accord, votre réservation a été annulée. Nous allons reprendre depuis le début.", sender: "bot" });
