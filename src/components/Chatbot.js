@@ -345,6 +345,9 @@ const Chatbot = () => {
                                     sentAt: formattedDate,
                                     status: "en attente" // ou "refusée"
                             }
+
+                            console.log(templateParams);
+                            
                             await emailjs.send(
                                 'service_sjvypzp',             // ID du service
                                 'template_m59xsm7',   // ID du template
@@ -370,7 +373,7 @@ const Chatbot = () => {
                                 sentAt: formattedDate,
                                 status: "en attente" // ou "refusée"
                             }
-
+                            console.log(templateParams);
                             await emailjs.send(
                                 'service_sjvypzp',             // ID du service
                                 'template_m91rrm3',   // ID du template
@@ -406,7 +409,7 @@ const Chatbot = () => {
                         sentAt: formattedDate,
                         status: "refusée"
                     }
-
+                    console.log(templateParams);
                     await emailjs.send(
                         'service_sjvypzp',
                         'template_m91rrm3',
