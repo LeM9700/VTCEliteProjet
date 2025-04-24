@@ -209,9 +209,11 @@ const Chatbot = () => {
             } else if (step === 10) {
                 
                 if (reservation.serviceType === "Trajet Confort" || reservation.serviceType === "Trajet Premium") {
-                    setReservation({ ...reservation, time: escapedResponse });
+                    
                     // Appel à la fonction pour calculer la distance et le tarif
-                    calculateDistanceAndFare(reservation.location, reservation.destination,reservation.serviceType);}
+                    calculateDistanceAndFare(reservation.location, reservation.destination,reservation.serviceType);
+                    setReservation({ ...reservation, time: escapedResponse });
+                }
                  
                 setReservation({ ...reservation, time: escapedResponse });
                 newMessages.push({ text: "Comment souhaitez-vous régler ?", sender: "bot" });
@@ -327,12 +329,9 @@ const Chatbot = () => {
                         if (reservation.serviceType === "Mise à disposition"){
 
 
+                            const templateParams = {
 
-                            await emailjs.send(
-                                'service_sjvypzp',             // ID du service
-                                'template_m59xsm7',   // ID du template
-                                {
-                                    name: reservation.name,
+                                name: reservation.name,
                                     location: reservation.location,
                                     serviceType: reservation.serviceType,
                                     passengers: reservation.passengers,
@@ -345,31 +344,37 @@ const Chatbot = () => {
                                     prix: reservation.prix,
                                     sentAt: formattedDate,
                                     status: "en attente" // ou "refusée"
-                                },
+                            }
+                            await emailjs.send(
+                                'service_sjvypzp',             // ID du service
+                                'template_m59xsm7',   // ID du template
+                                templateParams,
                                 'Er6iVCvQCds16CSph'         // Votre user ID EmailJS
                               );
 
                         }
                         else if (reservation.serviceType === "Trajet Confort " ||"Trajet Premium"){
 
+                            const templateParams = {
+                                name: reservation.name,
+                                location: reservation.location,
+                                destination: reservation.destination,
+                                serviceType: reservation.serviceType,
+                                passengers: reservation.passengers,
+                                bags: reservation.bags,
+                                date: reservation.date,
+                                time: reservation.time,
+                                payment: reservation.payment,
+                                phone: reservation.phone,
+                                prix: reservation.prix,
+                                sentAt: formattedDate,
+                                status: "en attente" // ou "refusée"
+                            }
+
                             await emailjs.send(
                                 'service_sjvypzp',             // ID du service
                                 'template_m91rrm3',   // ID du template
-                                {
-                                    name: reservation.name,
-                                    location: reservation.location,
-                                    destination: reservation.destination,
-                                    serviceType: reservation.serviceType,
-                                    passengers: reservation.passengers,
-                                    bags: reservation.bags,
-                                    date: reservation.date,
-                                    time: reservation.time,
-                                    payment: reservation.payment,
-                                    phone: reservation.phone,
-                                    prix: reservation.prix,
-                                    sentAt: formattedDate,
-                                    status: "en attente" // ou "refusée"
-                                },
+                                templateParams,
                                 'Er6iVCvQCds16CSph'         // Votre user ID EmailJS
                               );
 
@@ -387,22 +392,25 @@ const Chatbot = () => {
 
                     const now = new Date();
                     const formattedDate = now.toLocaleDateString('fr-FR'); // => "22/04/2025"
+
+                    const templateParams ={
+                        name: reservation.name,
+                        location: reservation.location,
+                        destination: reservation.destination,
+                        serviceType: reservation.serviceType,
+                        date: reservation.date,
+                        time: reservation.time,
+                        payment: reservation.payment,
+                        phone: reservation.phone,
+                        prix: reservation.prix,
+                        sentAt: formattedDate,
+                        status: "refusée"
+                    }
+
                     await emailjs.send(
                         'service_sjvypzp',
                         'template_m91rrm3',
-                        {
-                            name: reservation.name,
-                            location: reservation.location,
-                            destination: reservation.destination,
-                            serviceType: reservation.serviceType,
-                            date: reservation.date,
-                            time: reservation.time,
-                            payment: reservation.payment,
-                            phone: reservation.phone,
-                            prix: reservation.prix,
-                            sentAt: formattedDate,
-                            status: "refusée"
-                        },
+                        templateParams,
                         'Er6iVCvQCds16CSph'
                       );
                       
