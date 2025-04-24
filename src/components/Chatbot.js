@@ -19,7 +19,7 @@ const Chatbot = () => {
     const [step, setStep] = useState(1);
     const [reservation, setReservation] = useState({ 
         name: "", location: "", destination: "", serviceType: "", passengers: "", bags: "", 
-        hour:"", date: "", time: "", payment: "", phone: "", prix : ""
+        hour:"", date: "", time: "", payment: "", phone: "", prix : "", sentAt:"", status : "pending"
     });
     const [input, setInput] = useState("");
     const [isTyping, setIsTyping] = useState(false);
@@ -136,7 +136,7 @@ const Chatbot = () => {
                 setStep(2);
             } else if (step === 2) {
                 setReservation({ ...reservation, name: escapedResponse });
-                newMessages.push({ text: "Chez VTCLAND, nous avons conçu deux services exclusifs pour répondre à vos besoins : \n\n 🚗 Mise à disposition – Un chauffeur privé à votre entière disposition, idéal pour une liberté totale et des déplacements flexibles.\n\n 📍 Trajet direct – Un transport sur-mesure d’un point A à un point B, pour un voyage simple, rapide et efficace.\n\nQuel service vous conviendrait le mieux ?", sender: "bot" });
+                newMessages.push({ text: "Chez VTCLAND, nous avons conçu deux services exclusifs pour répondre à vos besoins : \n\n 🚗 Mise à disposition – Un chauffeur privé à votre entière disposition, idéal pour une liberté totale et des déplacements flexibles.\n\n 📍 Trajet direct – Un transport sur-mesure d’un point A à un point B, pour un voyage simple, rapide et efficace. Vous aurez le choix entre le trajet Confort ou premium. \n\nQuel service vous conviendrait le mieux ?", sender: "bot" });
                 setStep(3);
             } else if (step === 3) {
                 setReservation({ ...reservation, serviceType: escapedResponse });
@@ -145,7 +145,7 @@ const Chatbot = () => {
                 
             } else if (step === 4) {
                 setReservation({ ...reservation, location: escapedResponse });
-                if (reservation.serviceType === "Trajet classique" || reservation.serviceType === "Trajet Premium") {
+                if (reservation.serviceType === "Trajet Confort" || reservation.serviceType === "Trajet Premium") {
                     newMessages.push({ text: "Pouvez-vous m'indiquer le lieu de destination ?", sender: "bot" });
                     setStep(5);
                 } 
@@ -205,7 +205,8 @@ const Chatbot = () => {
                 newMessages.push({ text: "À quelle heure souhaitez-vous être pris en charge ?", sender: "bot" });
                 setStep(10);}
             } else if (step === 10) {
-                if (reservation.serviceType === "Trajet classique" || reservation.serviceType === "Trajet Premium") {
+                setReservation({ ...reservation, hour: escapedResponse });
+                if (reservation.serviceType === "Trajet Confort" || reservation.serviceType === "Trajet Premium") {
                     // Appel à la fonction pour calculer la distance et le tarif
                     calculateDistanceAndFare(reservation.location, reservation.destination,reservation.serviceType);}
                  
@@ -304,6 +305,12 @@ const Chatbot = () => {
             else if (step === 14) {
                 if (response.toLowerCase() === "oui") {
                     try {
+
+                        const now = new Date();
+                        const formattedDate = now.toLocaleDateString('fr-FR'); // => "22/04/2025"
+                  
+                        setReservation({ ...reservation, sentAt: formattedDate });
+
                         await addDoc(collection(db, "reservations"), reservation);
                         newMessages.push({
                             text: "Merci ! Votre demande réservation est enregistrée et une demande a été envoyée à notre équipe de planification. Une réponse vous sera envoyée dans quelques minutes pour confirmer la prise en charge et le montant. VTCLAND vous remercie pour votre confiance !",
@@ -362,7 +369,7 @@ const Chatbot = () => {
                     {step === 1 && ["GO !"].map(option => (
                         <button key={option} onClick={() => handleResponse(option)}>{option}</button>
                     ))}
-                    {step === 3 && ["Trajet classique","Trajet Premium","Mise à disposition"].map(option => (
+                    {step === 3 && ["Trajet Confort","Trajet Premium","Mise à disposition"].map(option => (
                         <button key={option} onClick={() => handleResponse(option)}>{option}</button>
                     ))}
                     {(step === 4 )&& (<div><AddressAutocomplete onPlaceSelected={(val) => handleResponse(val)} /></div>)}
