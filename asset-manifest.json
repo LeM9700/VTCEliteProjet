@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/VTCEliteProjet/static/css/main.c171c636.css",
-    "main.js": "/VTCEliteProjet/static/js/main.f3268403.js",
+    "main.js": "/VTCEliteProjet/static/js/main.bee31149.js",
     "static/js/453.04326ae8.chunk.js": "/VTCEliteProjet/static/js/453.04326ae8.chunk.js",
     "index.html": "/VTCEliteProjet/index.html",
     "main.c171c636.css.map": "/VTCEliteProjet/static/css/main.c171c636.css.map",
-    "main.f3268403.js.map": "/VTCEliteProjet/static/js/main.f3268403.js.map",
+    "main.bee31149.js.map": "/VTCEliteProjet/static/js/main.bee31149.js.map",
     "453.04326ae8.chunk.js.map": "/VTCEliteProjet/static/js/453.04326ae8.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c171c636.css",
-    "static/js/main.f3268403.js"
+    "static/js/main.bee31149.js"
   ]
 }
