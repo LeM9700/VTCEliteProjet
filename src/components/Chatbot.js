@@ -207,7 +207,7 @@ const Chatbot = () => {
                 newMessages.push({ text: "À quelle heure souhaitez-vous être pris en charge ?", sender: "bot" });
                 setStep(10);}
             } else if (step === 10) {
-                
+                setReservation({ ...reservation, time: escapedResponse });
                 if (reservation.serviceType === "Trajet Confort" || reservation.serviceType === "Trajet Premium") {
                     
                     // Appel à la fonction pour calculer la distance et le tarif
