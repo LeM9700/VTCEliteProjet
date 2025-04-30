@@ -313,7 +313,7 @@ const Chatbot = () => {
             \n🕒 ${reservation.time}
             \n💰 Paiement : ${reservation.payment}
             \n📞 Téléphone : ${reservation.phone}
-            \n💵 Prix : ${reservation.prix}
+            \n💵 Prix : ${reservation.prix ?? "Calcul en cours"}
             \nConfirmez-vous votre demande réservation ?`,
                     sender: "bot"
                 });
@@ -338,22 +338,21 @@ const Chatbot = () => {
 
 
                             const templateParams = {
-
-                                name: reservation.name,
-                                    location: reservation.location,
-                                    serviceType: reservation.serviceType,
-                                    passengers: reservation.passengers,
-                                    bags: reservation.bags,
-                                    hour: reservation.hour,
-                                    date: reservation.date,
-                                    time: reservation.time,
-                                    payment: reservation.payment,
-                                    phone: reservation.phone,
-                                    prix: reservation.prix,
-                                    sentAt: formattedDate,
-                                    status: "en attente" // ou "refusée"
-                            }
-
+                                name: reservation.name ?? "Non spécifié",
+                                location: reservation.location ?? "Non spécifié",
+                                destination: reservation.destination ?? "Non spécifiée",
+                                serviceType: reservation.serviceType ?? "Non spécifié",
+                                passengers: reservation.passengers ?? "-",
+                                bags: reservation.bags ?? "-",
+                                date: reservation.date ?? "-",
+                                time: reservation.time ?? "-",
+                                payment: reservation.payment ?? "-",
+                                phone: reservation.phone ?? "-",
+                                prix: reservation.prix ?? "Calcul en cours",
+                                sentAt: reservation.sentAt ?? new Date().toLocaleDateString('fr-FR'),
+                                status: "en attente"
+                              };
+                              
                             console.log(templateParams);
                             
                             await emailjs.send(
@@ -364,23 +363,24 @@ const Chatbot = () => {
                               );
 
                         }
-                        else if (reservation.serviceType === "Trajet Confort " ||"Trajet Premium"){
+                        else if (reservation.serviceType === "Trajet Confort " || reservation.serviceType === "Trajet Premium"){
 
                             const templateParams = {
-                                name: reservation.name,
-                                location: reservation.location,
-                                destination: reservation.destination,
-                                serviceType: reservation.serviceType,
-                                passengers: reservation.passengers,
-                                bags: reservation.bags,
-                                date: reservation.date,
-                                time: reservation.time,
-                                payment: reservation.payment,
-                                phone: reservation.phone,
-                                prix: reservation.prix,
-                                sentAt: formattedDate,
-                                status: "en attente" // ou "refusée"
-                            }
+                                name: reservation.name ?? "Non spécifié",
+                                location: reservation.location ?? "Non spécifié",
+                                destination: reservation.destination ?? "Non spécifiée",
+                                serviceType: reservation.serviceType ?? "Non spécifié",
+                                passengers: reservation.passengers ?? "-",
+                                bags: reservation.bags ?? "-",
+                                date: reservation.date ?? "-",
+                                time: reservation.time ?? "-",
+                                payment: reservation.payment ?? "-",
+                                phone: reservation.phone ?? "-",
+                                prix: reservation.prix ?? "Calcul en cours",
+                                sentAt: reservation.sentAt ?? new Date().toLocaleDateString('fr-FR'),
+                                status: "en attente"
+                              };
+                              
                             console.log(templateParams);
                             await emailjs.send(
                                 'service_sjvypzp',             // ID du service
