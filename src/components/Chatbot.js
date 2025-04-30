@@ -97,6 +97,19 @@ const Chatbot = () => {
         }
     }, []);
 
+    useEffect(() => {
+        if (
+            reservation.time &&  // time vient d’être mis à jour
+            (reservation.serviceType === "Trajet Confort" || reservation.serviceType === "Trajet Premium")
+        ) {
+            calculateDistanceAndFare(
+                reservation.location,
+                reservation.destination,
+                reservation.serviceType
+            );
+        }
+    }, [reservation.time]); // ce bloc s’exécute UNIQUEMENT quand time change
+    
     
 
     const validatePhoneNumber = (number) => {
@@ -207,13 +220,8 @@ const Chatbot = () => {
                 newMessages.push({ text: "À quelle heure souhaitez-vous être pris en charge ?", sender: "bot" });
                 setStep(10);}
             } else if (step === 10) {
-                setReservation({ ...reservation, time: escapedResponse });
-                if (reservation.serviceType === "Trajet Confort" || reservation.serviceType === "Trajet Premium") {
-                    
-                    // Appel à la fonction pour calculer la distance et le tarif
-                    calculateDistanceAndFare(reservation.location, reservation.destination,reservation.serviceType);
-                    setReservation({ ...reservation, time: escapedResponse });
-                }
+                
+                
                  
                 setReservation({ ...reservation, time: escapedResponse });
                 newMessages.push({ text: "Comment souhaitez-vous régler ?", sender: "bot" });
@@ -401,6 +409,7 @@ const Chatbot = () => {
                         location: reservation.location,
                         destination: reservation.destination,
                         serviceType: reservation.serviceType,
+                        passengers: reservation.passengers,
                         date: reservation.date,
                         time: reservation.time,
                         payment: reservation.payment,
