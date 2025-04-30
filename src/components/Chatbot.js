@@ -346,11 +346,13 @@ const Chatbot = () => {
                                 bags: reservation.bags ?? "-",
                                 date: reservation.date ?? "-",
                                 time: reservation.time ?? "-",
+                                hour: reservation.hour ?? "N/A", // ✅ AJOUTÉ
                                 payment: reservation.payment ?? "-",
                                 phone: reservation.phone ?? "-",
                                 prix: reservation.prix ?? "Calcul en cours",
                                 sentAt: reservation.sentAt ?? new Date().toLocaleDateString('fr-FR'),
-                                status: "en attente"
+                                status: "en attente",
+                                statusColor: reservation.status === "refusée" ? "red" : "green" // ✅ AJOUTÉ
                               };
                               
                             console.log(templateParams);
@@ -383,11 +385,13 @@ const Chatbot = () => {
                         bags: reservation.bags ?? "-",
                         date: reservation.date ?? "-",
                         time: reservation.time ?? "-",
+                        hour: reservation.hour ?? "N/A", // ✅ AJOUTÉ
                         payment: reservation.payment ?? "-",
                         phone: reservation.phone ?? "-",
                         prix: reservation.prix ?? "Calcul en cours",
                         sentAt: reservation.sentAt ?? formattedDate,
-                        status: "refusée"
+                        status: "refusée",
+                        statusColor: reservation.status === "refusée" ? "red" : "green" // ✅ AJOUTÉ
                     }
                     console.log(templateParams);
                     await emailjs.send(
