@@ -206,8 +206,8 @@ const Chatbot = () => {
                 newMessages.push({ text: "Quelle date souhaitez-vous réserver ?", sender: "bot" });
                 setStep(9);
             } else if (step === 9) {
-                const selectedDate = new Date(response);
-                const today = new Date();
+                const selectedDate = new Date(response).toLocaleDateString('fr-FR');
+                const today = new Date().toLocaleDateString('fr-FR');
                 today.setHours(0, 0, 0, 0);
                 if (selectedDate < today) {
                     newMessages.push({ text: "⚠️ Veuillez sélectionner une date valide (à partir d'aujourd'hui).", sender: "bot" });
@@ -334,7 +334,7 @@ const Chatbot = () => {
                             text: "Merci ! Votre demande réservation est enregistrée et une demande a été envoyée à notre équipe de planification. Une réponse vous sera envoyée dans quelques minutes pour confirmer la prise en charge et le montant. VTCLAND vous remercie pour votre confiance !",
                             sender: "bot"
                         });
-                        if (reservation.serviceType === "Mise à disposition"){
+                        
 
 
                             const templateParams = {
@@ -362,11 +362,20 @@ const Chatbot = () => {
                                 'Er6iVCvQCds16CSph'         // Votre user ID EmailJS
                               );
 
-                        }
-                        else if (reservation.serviceType === "Trajet Confort " || reservation.serviceType === "Trajet Premium"){
+                        
+                          
+            
+                        setTimeout(() => navigate("https://lem9700.github.io/vtc-redirection/"), 70000);
+                    } catch (error) {
+                        newMessages.push({ text: "Erreur lors de l'enregistrement. Veuillez réessayer. " + error.message, sender: "bot" });
+                    }
+                } else {
 
-                            const templateParams = {
-                                name: reservation.name ?? "Non spécifié",
+                    const now = new Date();
+                    const formattedDate = now.toLocaleDateString('fr-FR'); // => "22/04/2025"
+
+                    const templateParams ={
+                        name: reservation.name ?? "Non spécifié",
                                 location: reservation.location ?? "Non spécifié",
                                 destination: reservation.destination ?? "Non spécifiée",
                                 serviceType: reservation.serviceType ?? "Non spécifié",
@@ -377,45 +386,7 @@ const Chatbot = () => {
                                 payment: reservation.payment ?? "-",
                                 phone: reservation.phone ?? "-",
                                 prix: reservation.prix ?? "Calcul en cours",
-                                sentAt: reservation.sentAt ?? new Date().toLocaleDateString('fr-FR'),
-                                status: "en attente"
-                              };
-                              
-                            console.log(templateParams);
-                            await emailjs.send(
-                                'service_sjvypzp',             // ID du service
-                                'template_m91rrm3',   // ID du template
-                                templateParams,
-                                'Er6iVCvQCds16CSph'         // Votre user ID EmailJS
-                              );
-
-
-
-                        }
-                        
-                          
-            
-                        setTimeout(() => navigate("https://lem9700.github.io/vtc-redirection/"), 7000);
-                    } catch (error) {
-                        newMessages.push({ text: "Erreur lors de l'enregistrement. Veuillez réessayer. " + error.message, sender: "bot" });
-                    }
-                } else {
-
-                    const now = new Date();
-                    const formattedDate = now.toLocaleDateString('fr-FR'); // => "22/04/2025"
-
-                    const templateParams ={
-                        name: reservation.name,
-                        location: reservation.location,
-                        destination: reservation.destination,
-                        serviceType: reservation.serviceType,
-                        passengers: reservation.passengers,
-                        date: reservation.date,
-                        time: reservation.time,
-                        payment: reservation.payment,
-                        phone: reservation.phone,
-                        prix: reservation.prix,
-                        sentAt: formattedDate,
+                                sentAt: reservation.sentAt ?? formattedDate,
                         status: "refusée"
                     }
                     console.log(templateParams);
