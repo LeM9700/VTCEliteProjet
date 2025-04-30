@@ -206,8 +206,8 @@ const Chatbot = () => {
                 newMessages.push({ text: "Quelle date souhaitez-vous réserver ?", sender: "bot" });
                 setStep(9);
             } else if (step === 9) {
-                const selectedDate = new Date(response).toLocaleDateString('fr-FR');
-                const today = new Date().toLocaleDateString('fr-FR');
+                const selectedDate = new Date(response);
+                const today = new Date();
                 today.setHours(0, 0, 0, 0);
                 if (selectedDate < today) {
                     newMessages.push({ text: "⚠️ Veuillez sélectionner une date valide (à partir d'aujourd'hui).", sender: "bot" });
@@ -376,17 +376,17 @@ const Chatbot = () => {
 
                     const templateParams ={
                         name: reservation.name ?? "Non spécifié",
-                                location: reservation.location ?? "Non spécifié",
-                                destination: reservation.destination ?? "Non spécifiée",
-                                serviceType: reservation.serviceType ?? "Non spécifié",
-                                passengers: reservation.passengers ?? "-",
-                                bags: reservation.bags ?? "-",
-                                date: reservation.date ?? "-",
-                                time: reservation.time ?? "-",
-                                payment: reservation.payment ?? "-",
-                                phone: reservation.phone ?? "-",
-                                prix: reservation.prix ?? "Calcul en cours",
-                                sentAt: reservation.sentAt ?? formattedDate,
+                        location: reservation.location ?? "Non spécifié",
+                        destination: reservation.destination ?? "Non spécifiée",
+                        serviceType: reservation.serviceType ?? "Non spécifié",
+                        passengers: reservation.passengers ?? "-",
+                        bags: reservation.bags ?? "-",
+                        date: reservation.date ?? "-",
+                        time: reservation.time ?? "-",
+                        payment: reservation.payment ?? "-",
+                        phone: reservation.phone ?? "-",
+                        prix: reservation.prix ?? "Calcul en cours",
+                        sentAt: reservation.sentAt ?? formattedDate,
                         status: "refusée"
                     }
                     console.log(templateParams);
