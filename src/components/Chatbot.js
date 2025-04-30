@@ -337,25 +337,27 @@ const Chatbot = () => {
                         
 
 
-                            const templateParams = {
-                                name: reservation.name ?? "Non spécifié",
-                                location: reservation.location ?? "Non spécifié",
-                                destination: reservation.destination ?? "Non spécifiée",
-                                serviceType: reservation.serviceType ?? "Non spécifié",
-                                passengers: reservation.passengers ?? "-",
-                                bags: reservation.bags ?? "-",
-                                date: reservation.date ?? "-",
-                                time: reservation.time ?? "-",
-                                hour: reservation.hour ?? "N/A", // ✅ AJOUTÉ
-                                payment: reservation.payment ?? "-",
-                                phone: reservation.phone ?? "-",
-                                prix: reservation.prix ?? "Calcul en cours",
-                                sentAt: reservation.sentAt ?? new Date().toLocaleDateString('fr-FR'),
-                                status: "en attente",
-                                statusColor: reservation.status === "refusée" ? "red" : "green" // ✅ AJOUTÉ
-                              };
+                        const templateParams = {
+                            name: reservation.name ?? "N/A",
+                            location: reservation.location ?? "N/A",
+                            destination: reservation.destination ?? "N/A", // Même s’il n’est pas utilisé
+                            serviceType: reservation.serviceType ?? "N/A",
+                            passengers: reservation.passengers ?? "0",
+                            bags: reservation.bags ?? "0",
+                            date: reservation.date ?? "N/A",
+                            time: reservation.time ?? "N/A",
+                            hour: reservation.hour ?? "N/A", // ✅ AJOUTÉ
+                            payment: reservation.payment ?? "N/A",
+                            phone: reservation.phone ?? "N/A",
+                            prix: reservation.prix ?? "Non calculé",
+                            sentAt: reservation.sentAt ?? new Date().toLocaleDateString("fr-FR"),
+                            status: reservation.status ?? "en attente",
+                            statusColor: reservation.status === "refusée" ? "red" : "green" // ✅ AJOUTÉ
+                          };
+                          
                               
-                            console.log(templateParams);
+                          console.log("🧪 Paramètres envoyés à EmailJS :", JSON.stringify(templateParams, null, 2));
+
                             
                             await emailjs.send(
                                 'service_sjvypzp',             // ID du service
@@ -376,24 +378,26 @@ const Chatbot = () => {
                     const now = new Date();
                     const formattedDate = now.toLocaleDateString('fr-FR'); // => "22/04/2025"
 
-                    const templateParams ={
-                        name: reservation.name ?? "Non spécifié",
-                        location: reservation.location ?? "Non spécifié",
-                        destination: reservation.destination ?? "Non spécifiée",
-                        serviceType: reservation.serviceType ?? "Non spécifié",
-                        passengers: reservation.passengers ?? "-",
-                        bags: reservation.bags ?? "-",
-                        date: reservation.date ?? "-",
-                        time: reservation.time ?? "-",
+                    const templateParams = {
+                        name: reservation.name ?? "N/A",
+                        location: reservation.location ?? "N/A",
+                        destination: reservation.destination ?? "N/A", // Même s’il n’est pas utilisé
+                        serviceType: reservation.serviceType ?? "N/A",
+                        passengers: reservation.passengers ?? "0",
+                        bags: reservation.bags ?? "0",
+                        date: reservation.date ?? "N/A",
+                        time: reservation.time ?? "N/A",
                         hour: reservation.hour ?? "N/A", // ✅ AJOUTÉ
-                        payment: reservation.payment ?? "-",
-                        phone: reservation.phone ?? "-",
-                        prix: reservation.prix ?? "Calcul en cours",
+                        payment: reservation.payment ?? "N/A",
+                        phone: reservation.phone ?? "N/A",
+                        prix: reservation.prix ?? "Non calculé",
                         sentAt: reservation.sentAt ?? formattedDate,
-                        status: "refusée",
+                        status: reservation.status ?? "refusée",
                         statusColor: reservation.status === "refusée" ? "red" : "green" // ✅ AJOUTÉ
-                    }
-                    console.log(templateParams);
+                      };
+                      
+                      console.log("🧪 Paramètres envoyés à EmailJS :", JSON.stringify(templateParams, null, 2));
+
                     await emailjs.send(
                         'service_sjvypzp',
                         'template_m91rrm3',
