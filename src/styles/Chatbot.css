@@ -31,7 +31,7 @@ body, html {
 }
 
 .bot {
-    background: #61aa42;
+    background:rgb(167, 0, 0);
     align-self: flex-start;
     text-align: left;
     max-width: 60%;
@@ -53,7 +53,7 @@ body, html {
 }
 
 button {
-    background: #7ed957;
+    background:rgba(167, 0, 0, 0.71);
     color: black;
     border: none;
     padding: 10px 15px;
@@ -91,5 +91,5 @@ input[type="date"]:focus,
 input[type="time"]:focus {
     outline: none;
     background: #292929;
-    box-shadow: 0 0 8px rgba(126, 217, 87, 0.6);
+    box-shadow: 0 0 8px rgba(167, 0, 0, 0.53)
 }
